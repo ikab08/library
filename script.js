@@ -1,5 +1,11 @@
-const myLibrary = [];
+let myLibrary = [];
 const main = document.querySelector("#main");
+
+const newBtn = document.querySelector("#new-btn");
+const cancelBtn = document.querySelector("#cancel-btn");
+const bookForm = document.querySelector("#form");
+const bookDialog = document.querySelector("#my-dialog");
+
 
 function Book(title, author, pages, read) {
   if (!new.target) {
@@ -18,11 +24,12 @@ function addBookToLibrary(bookObject) {
 }
 
 function intialize() {
-	addBookToLibrary(new Book("The Old Man and the Sea", "Ernest Hemingway", 140, "read"));
-	addBookToLibrary(new Book("Harry Potter and the Philosopher’s Stone", "J.K. Rowling", 305, "read"));
-	addBookToLibrary(new Book("Lord of the Flies", "William Golding", 240, "no-read"));
+	addBookToLibrary(new Book("The Old Man and the Sea", "Ernest Hemingway", 140, "Read"));
+	addBookToLibrary(new Book("Harry Potter and the Philosopher’s Stone", "J.K. Rowling", 305, "Read"));
+	addBookToLibrary(new Book("Lord of the Flies", "William Golding", 240, "Not Read"));
+
+	displayBook();
 }
-intialize();
 
 function displayBook() {
   const fragment = document.createDocumentFragment();
@@ -60,4 +67,35 @@ function displayBook() {
   main.appendChild(fragment);
 }
 
-displayBook();
+function getBookFormdata(form) {
+	const formData = new FormData(form);
+
+	return {
+		title: formData.get("title"),
+		author: formData.get("author"),
+		pages: formData.get("pages"),
+		read: formData.has("read"),
+	};
+}
+
+newBtn.addEventListener("click", () => {
+  bookDialog.showModal();
+});
+
+cancelBtn.addEventListener("click", () => {
+  bookDialog.close(); 
+  bookForm.reset(); 
+});
+
+bookForm.addEventListener("submit", (event)=>{
+	event.preventDefault();
+	myLibrary = [];
+
+	const bookUzer = getBookFormdata(bookForm);
+	addBookToLibrary(bookUzer);
+	displayBook();
+	bookDialog.close();
+	bookForm.reset(); 
+});
+
+intialize();
