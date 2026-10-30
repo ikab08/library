@@ -6,6 +6,9 @@ const cancelBtn = document.querySelector("#cancel-btn");
 const bookForm = document.querySelector("#form");
 const bookDialog = document.querySelector("#my-dialog");
 
+const editBtn = document.querySelector("#edit-btn");
+const deleteBtn = document.querySelector("#delete-btn");
+
 
 function Book(title, author, pages, read) {
   if (!new.target) {
@@ -37,32 +40,24 @@ function displayBook() {
 
 	myLibrary.forEach(book => {
     const card = document.createElement("div");
-    card.classList.add("card");
+		card.innerHTML =`
+			<div class="card" id=${book.id}>
+				<div class="book-content">
+					<p class="book-title">${book.title}</p>
+					<p class="book-author">${book.author}</p>
+					<p class="book-page">${book.pages} pages</p>
+					<p class="book-read">${book.read ? "Read" : "Not Read"}</p>
+				</div>
+				<div class="book-buttons">
+					<button class="edit-btn" data-id=${book.id}> 
+						<img src="assets/icons/pencil.svg" alt="icon" class="icon"> 
+					</button>
+					<button class="delete-btn" data-id=${book.id}> 
+						<img src="assets/icons/trash-can-outline.svg" alt="icon" class="icon"> 
+					</button>
+				</div>
+			</div>`;
 
-		const cardContent = document.createElement("div");
-		cardContent.classList.add("card-content");
-
-		const pTitle = document.createElement("p");
-		pTitle.classList.add("book-title");
-		pTitle.textContent = book.title;
-
-		const pAuthor = document.createElement("p");
-		pAuthor.classList.add("book-author");
-		pAuthor.textContent = book.author;
-
-		const pPage = document.createElement("p");
-		pPage.classList.add("book-page");
-		pPage.textContent = `${book.pages} pages`;
-
-		const pRead = document.createElement("p");
-		pRead.classList.add("book-read");
-		pRead.textContent = book.read ? "Read" : "Not Read";
-
-		cardContent.appendChild(pTitle);
-		cardContent.appendChild(pAuthor);
-		cardContent.appendChild(pPage);
-		cardContent.appendChild(pRead);
-		card.appendChild(cardContent)
     fragment.appendChild(card);
   });
   mainContainer.appendChild(fragment);
@@ -71,12 +66,12 @@ function displayBook() {
 function getBookFormdata(form) {
 	const formData = new FormData(form);
 
-	return {
-		title: formData.get("title"),
-		author: formData.get("author"),
-		pages: formData.get("pages"),
-		read: formData.has("read"),
-	};
+	return new Book(
+		formData.get("title"),
+		formData.get("author"),
+		formData.get("pages"),
+		formData.has("read"),
+	);
 }
 
 newBtn.addEventListener("click", () => {
@@ -96,6 +91,22 @@ bookForm.addEventListener("submit", (event)=>{
 	displayBook();
 	bookDialog.close();
 	bookForm.reset(); 
+});
+
+mainContainer.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest(".delete-btn");
+  const editButton = event.target.closest(".edit-btn");
+  
+  if (deleteButton) {
+    const idToDelete = deleteButton.dataset.id; 
+
+    myLibrary = myLibrary.filter(book => book.id !== idToDelete);
+    displayBook();
+  }
+
+  if (editButton) {
+    console.log("Edit logic here!");
+  }
 });
 
 intialize();
