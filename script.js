@@ -1,4 +1,5 @@
 let myLibrary = [];
+let currentEditBookId = null; 
 const mainContainer = document.querySelector("#main");
 
 const newBtn = document.querySelector("#new-btn");
@@ -8,7 +9,6 @@ const bookDialog = document.querySelector("#my-dialog");
 
 const editBtn = document.querySelector("#edit-btn");
 const deleteBtn = document.querySelector("#delete-btn");
-
 
 function Book(title, author, pages, read) {
   if (!new.target) {
@@ -75,10 +75,14 @@ function getBookFormdata(form) {
 }
 
 newBtn.addEventListener("click", () => {
+	currentEditBookId = null;
   bookDialog.showModal();
 });
 
 cancelBtn.addEventListener("click", () => {
+	currentEditBookId = null;
+	document.querySelector("#fieldset").textContent = "Add book";
+	document.querySelector("#add-btn").textContent = "Add book";
   bookDialog.close(); 
   bookForm.reset(); 
 });
@@ -86,8 +90,22 @@ cancelBtn.addEventListener("click", () => {
 bookForm.addEventListener("submit", (event)=>{
 	event.preventDefault();
 
-	const bookUzer = getBookFormdata(bookForm);
-	addBookToLibrary(bookUzer);
+	const formData = new FormData(bookForm);
+
+	if (currentEditBookId) { 
+		const bookToUpdate = myLibrary.find(book => book.id === currentEditBookId);
+		
+    if (bookToUpdate) {
+      bookToUpdate.title = formData.get("title");
+      bookToUpdate.author = formData.get("author");
+      bookToUpdate.pages = formData.get("pages");
+      bookToUpdate.read = formData.has("read");
+    }
+    currentEditBookId = null; 
+	} else {
+		const bookUzer = getBookFormdata(bookForm);
+		addBookToLibrary(bookUzer);
+	}
 	displayBook();
 	bookDialog.close();
 	bookForm.reset(); 
@@ -105,7 +123,23 @@ mainContainer.addEventListener("click", (event) => {
   }
 
   if (editButton) {
-    console.log("Edit logic here!");
+    const cardElement = event.target.closest(".card");
+		const bookId = cardElement.id;
+
+		const bookToEdit = myLibrary.find(book => book.id === bookId);
+		if (bookToEdit) {
+			currentEditBookId = bookId;
+
+			document.querySelector("#title").value = bookToEdit.title;
+      document.querySelector("#author").value = bookToEdit.author;
+      document.querySelector("#pages").value = bookToEdit.pages;
+      document.querySelector("#read").checked = bookToEdit.read;
+
+			document.querySelector("#fieldset").textContent = "Edit book";
+			document.querySelector("#add-btn").textContent = "Edit book";
+				
+			bookDialog.showModal();
+		}
   }
 });
 
