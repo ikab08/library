@@ -9,7 +9,35 @@ body {
 }
 
 header {
-  text-align: center;
+	display: flex;
+	justify-content: space-between;
+	margin: 0 50px;
+}
+
+.new-btn,
+.add-btn,
+.cancel-btn {
+  font: inherit;
+  background-color: #596D48;
+  border: 2px solid #596D48;
+  color: #fff;
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 5px 20px;
+  cursor: pointer;
+	align-self: center;
+}
+
+.cancel-btn {
+  background-color:  #6b7280;
+  border: 2px solid  #6b7280;
+}
+
+.new-btn:hover,
+.add-btn:hover {
+	color: #000;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
 }
 
 main {
@@ -36,3 +64,61 @@ main {
 .book-author {
 	font-style: italic;
 }
+
+dialog {
+  width: min(90%, 400px);
+  margin: auto;
+  padding: 2rem;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 25%);
+}
+
+dialog::backdrop {
+  background-color: rgb(0 0 0 / 45%);
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+fieldset {
+	border: none;
+	text-align: center;
+	font-size: 1.2rem;
+}
+
+.input-group {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+input {
+  border: 1px solid #E5E7EB;
+  border-radius: 5px;
+	padding: 6px;
+}
+
+.btn-group {
+	align-self: flex-end;
+}
+
+/* button {
+  font: inherit;
+  margin-top: 10px;
+  padding: 8px 20px;
+  border: 2px solid #3b5bdb;
+  border-radius: 8px;
+  background-color: #fff;
+  color: #3b5bdb;
+  cursor: pointer;
+}
+
+button:hover {
+	background-color: #3b5bdb;
+  border: 2px solid #fff;
+	color: #fff;
+} */
