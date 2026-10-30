@@ -22,6 +22,10 @@ function Book(title, author, pages, read) {
 	this.read = read;
 }
 
+Book.prototype.toggleReadStatus = function() {
+  this.read = !this.read;
+};
+
 function addBookToLibrary(bookObject) {
   myLibrary.push(bookObject);
 }
@@ -46,8 +50,15 @@ function displayBook() {
 					<p class="book-title">${book.title}</p>
 					<p class="book-author">${book.author}</p>
 					<p class="book-page">${book.pages} pages</p>
-					<p class="book-read">${book.read ? "Read" : "Not Read"}</p>
+					<div class="status-container">
+            <span class="status-label">${book.read ? "Read" : "Not Read"}</span>
+            <label class="switch">
+              <input type="checkbox" class="status-toggle" data-id="${book.id}" ${book.read ? "checked" : ""}>
+              <span class="slider"></span>
+            </label>
+          </div>
 				</div>
+
 				<div class="book-buttons">
 					<button class="edit-btn" data-id=${book.id}> 
 						<img src="assets/icons/pencil.svg" alt="icon" class="icon"> 
@@ -114,6 +125,8 @@ bookForm.addEventListener("submit", (event)=>{
 mainContainer.addEventListener("click", (event) => {
   const deleteButton = event.target.closest(".delete-btn");
   const editButton = event.target.closest(".edit-btn");
+	const statusToggle = event.target.closest(".status-toggle");
+
   
   if (deleteButton) {
     const idToDelete = deleteButton.dataset.id; 
@@ -140,6 +153,19 @@ mainContainer.addEventListener("click", (event) => {
 				
 			bookDialog.showModal();
 		}
+  }
+
+	if (statusToggle) {
+    const bookId = statusToggle.dataset.id;
+    const bookToToggle = myLibrary.find(book => book.id === bookId);
+
+    if (bookToToggle) {
+      bookToToggle.toggleReadStatus();
+      
+      // change automatically the label
+      const label = statusToggle.closest(".status-container").querySelector(".status-label");
+      label.textContent = bookToToggle.read ? "Read" : "Not Read";
+    }
   }
 });
 
