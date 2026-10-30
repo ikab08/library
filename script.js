@@ -1,5 +1,5 @@
 let myLibrary = [];
-const main = document.querySelector("#main");
+const mainContainer = document.querySelector("#main");
 
 const newBtn = document.querySelector("#new-btn");
 const cancelBtn = document.querySelector("#cancel-btn");
@@ -24,14 +24,15 @@ function addBookToLibrary(bookObject) {
 }
 
 function intialize() {
-	addBookToLibrary(new Book("The Old Man and the Sea", "Ernest Hemingway", 140, "Read"));
-	addBookToLibrary(new Book("Harry Potter and the Philosopher’s Stone", "J.K. Rowling", 305, "Read"));
-	addBookToLibrary(new Book("Lord of the Flies", "William Golding", 240, "Not Read"));
+	addBookToLibrary(new Book("The Old Man and the Sea", "Ernest Hemingway", 140, true));
+	addBookToLibrary(new Book("Harry Potter and the Philosopher’s Stone", "J.K. Rowling", 305, true));
+	addBookToLibrary(new Book("Lord of the Flies", "William Golding", 240, false));
 
 	displayBook();
 }
 
 function displayBook() {
+	mainContainer.textContent = "";
   const fragment = document.createDocumentFragment();
 
 	myLibrary.forEach(book => {
@@ -55,7 +56,7 @@ function displayBook() {
 
 		const pRead = document.createElement("p");
 		pRead.classList.add("book-read");
-		pRead.textContent = book.read;
+		pRead.textContent = book.read ? "Read" : "Not Read";
 
 		cardContent.appendChild(pTitle);
 		cardContent.appendChild(pAuthor);
@@ -64,7 +65,7 @@ function displayBook() {
 		card.appendChild(cardContent)
     fragment.appendChild(card);
   });
-  main.appendChild(fragment);
+  mainContainer.appendChild(fragment);
 }
 
 function getBookFormdata(form) {
@@ -89,7 +90,6 @@ cancelBtn.addEventListener("click", () => {
 
 bookForm.addEventListener("submit", (event)=>{
 	event.preventDefault();
-	myLibrary = [];
 
 	const bookUzer = getBookFormdata(bookForm);
 	addBookToLibrary(bookUzer);
