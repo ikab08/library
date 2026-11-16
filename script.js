@@ -9,22 +9,20 @@ const bookDialog = document.querySelector("#my-dialog");
 
 const editBtn = document.querySelector("#edit-btn");
 const deleteBtn = document.querySelector("#delete-btn");
+class Book {
+	constructor (title, author, pages, read){
+		this.id = crypto.randomUUID();
 
-function Book(title, author, pages, read) {
-  if (!new.target) {
-    throw Error("You must use the 'new' operator to call the constructor");
+		this.title = title;
+		this.author = author;
+		this.pages = pages;
+		this.read = read;
 	}
 
-	this.id = crypto.randomUUID();
-	this.title = title;
-	this.author = author;
-	this.pages = pages;
-	this.read = read;
+	changeStatus() {
+  		this.read = !this.read;
+	}
 }
-
-Book.prototype.toggleReadStatus = function() {
-  this.read = !this.read;
-};
 
 function addBookToLibrary(bookObject) {
   myLibrary.push(bookObject);
@@ -160,7 +158,7 @@ mainContainer.addEventListener("click", (event) => {
     const bookToToggle = myLibrary.find(book => book.id === bookId);
 
     if (bookToToggle) {
-      bookToToggle.toggleReadStatus();
+      bookToToggle.changeStatus();
       
       // change automatically the label
       const label = statusToggle.closest(".status-container").querySelector(".status-label");
